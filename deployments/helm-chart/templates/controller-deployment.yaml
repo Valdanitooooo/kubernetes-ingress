@@ -32,7 +32,7 @@ spec:
       affinity:
 {{ toYaml .Values.controller.affinity | indent 8 }}
 {{- end }}
-      serviceAccountName: {{ .Values.controller.serviceAccount.name }}
+      serviceAccountName: {{ .Release.Name }}-{{ .Values.controller.serviceAccount.name }}
       hostNetwork: {{ .Values.controller.hostNetwork }}
       containers:
       - image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
@@ -58,11 +58,11 @@ spec:
               fieldPath: metadata.name
         args:
           - -nginx-plus={{ .Values.controller.nginxplus }}
-          - -nginx-configmaps=$(POD_NAMESPACE)/{{ .Values.controller.config.name }}
+          - -nginx-configmaps=$(POD_NAMESPACE)/{{ .Release.Name }}-{{ .Values.controller.config.name }}
 {{- if .Values.controller.defaultTLS.secret }}
           - -default-server-tls-secret={{ .Values.controller.defaultTLS.secret }}
 {{ else }}
-          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+          - -default-server-tls-secret=$(POD_NAMESPACE)/{{ .Release.Name }}-default-server-secret
 {{- end }}
           - -ingress-class={{ .Values.controller.ingressClass }}
           - -use-ingress-class-only={{ .Values.controller.useIngressClassOnly }}
@@ -80,12 +80,12 @@ spec:
           - -report-ingress-status
           - -external-service={{ .Values.controller.reportIngressStatus.externalService }}
           - -enable-leader-election={{ .Values.controller.reportIngressStatus.enableLeaderElection }}
-          - -leader-election-lock-name={{ .Values.controller.reportIngressStatus.leaderElectionLockName }}
+          - -leader-election-lock-name={{ .Release.Name }}-{{ .Values.controller.reportIngressStatus.leaderElectionLockName }}
 {{- end }}
 {{- if .Values.controller.wildcardTLS.secret }}
           - -wildcard-tls-secret={{ .Values.controller.wildcardTLS.secret }}
 {{- else if and .Values.controller.wildcardTLS.cert .Values.controller.wildcardTLS.key }}
-          - -wildcard-tls-secret=$(POD_NAMESPACE)/wildcard-tls-secret
+          - -wildcard-tls-secret=$(POD_NAMESPACE)/{{ .Release.Name }}-wildcard-tls-secret
 {{- end }}
           - -enable-prometheus-metrics={{ .Values.prometheus.create }}
           - -prometheus-metrics-listen-port={{ .Values.prometheus.port }}

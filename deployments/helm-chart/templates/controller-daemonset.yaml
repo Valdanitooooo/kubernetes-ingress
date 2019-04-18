@@ -19,7 +19,7 @@ spec:
         prometheus.io/port: "{{ .Values.prometheus.port }}"
 {{- end }}
     spec:
-      serviceAccountName: {{ .Values.controller.serviceAccount.name }}
+      serviceAccountName: {{ .Release.Name }}-{{ .Values.controller.serviceAccount.name }}
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
 {{- if .Values.controller.nodeSelector }}
       nodeSelector:
@@ -64,7 +64,7 @@ spec:
 {{- if .Values.controller.defaultTLS.secret }}
           - -default-server-tls-secret={{ .Values.controller.defaultTLS.secret }}
 {{ else }}
-          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+          - -default-server-tls-secret=$(POD_NAMESPACE)/{{ .Release.Name }}-default-server-secret
 {{- end }}
           - -ingress-class={{ .Values.controller.ingressClass }}
           - -use-ingress-class-only={{ .Values.controller.useIngressClassOnly }}
@@ -86,7 +86,7 @@ spec:
 {{- if .Values.controller.wildcardTLS.secret }}
           - -wildcard-tls-secret={{ .Values.controller.wildcardTLS.secret }}
 {{- else if and .Values.controller.wildcardTLS.cert .Values.controller.wildcardTLS.key }}
-          - -wildcard-tls-secret=$(POD_NAMESPACE)/wildcard-tls-secret
+          - -wildcard-tls-secret=$(POD_NAMESPACE)/{{ .Release.Name }}-wildcard-tls-secret
 {{- end }}
           - -enable-prometheus-metrics={{ .Values.prometheus.create }}
           - -prometheus-metrics-listen-port={{ .Values.prometheus.port }}

@@ -4,7 +4,7 @@
 Expand the name of the chart.
 */}}
 {{- define "nginx-ingress.name" -}}
-{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
