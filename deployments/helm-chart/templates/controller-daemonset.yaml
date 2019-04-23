@@ -60,7 +60,7 @@ spec:
               fieldPath: metadata.name
         args:
           - -nginx-plus={{ .Values.controller.nginxplus }}
-          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -nginx-configmaps=$(POD_NAMESPACE)/{{ .Release.Name }}-{{ .Values.controller.config.name }}
 {{- if .Values.controller.defaultTLS.secret }}
           - -default-server-tls-secret={{ .Values.controller.defaultTLS.secret }}
 {{ else }}
