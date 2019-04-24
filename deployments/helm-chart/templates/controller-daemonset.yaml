@@ -80,7 +80,7 @@ spec:
 {{- end }}
 {{- if .Values.controller.reportIngressStatus.enable }}
           - -report-ingress-status
-          - -external-service={{ .Values.controller.reportIngressStatus.externalService }}
+          - -external-service={{ .Release.Name }}-{{ .Values.controller.reportIngressStatus.externalService }}
           - -enable-leader-election={{ .Values.controller.reportIngressStatus.enableLeaderElection }}
 {{- end }}
 {{- if .Values.controller.wildcardTLS.secret }}
