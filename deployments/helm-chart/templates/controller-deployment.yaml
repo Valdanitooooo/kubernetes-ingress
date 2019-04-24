@@ -78,7 +78,7 @@ spec:
 {{- end }}
 {{- if .Values.controller.reportIngressStatus.enable }}
           - -report-ingress-status
-          - -external-service={{ .Release.Name }}-{{ .Values.controller.reportIngressStatus.externalService }}
+          - -external-service={{ include "nginx-ingress.name" . }}
           - -enable-leader-election={{ .Values.controller.reportIngressStatus.enableLeaderElection }}
           - -leader-election-lock-name={{ .Release.Name }}-{{ .Values.controller.reportIngressStatus.leaderElectionLockName }}
 {{- end }}
